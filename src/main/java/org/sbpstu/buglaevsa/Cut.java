@@ -18,7 +18,7 @@ public class Cut {
     }
 
     public void rangeParse(String range) {
-        if (range.length() == 3) {
+        if (range.matches("[0-9]+-[0-9]+")) {
             String[] ranges = range.split("-");
             this.start = Integer.parseInt(ranges[0]);
             this.end = Integer.parseInt(ranges[1]);
@@ -31,61 +31,55 @@ public class Cut {
         }
     }
 
-    public void cutter(String inputName, String outputName) throws IOException {
+    public void cutter(File inputName, File outputName) throws IOException {
         ArrayList<String> listOfString = new ArrayList<>();
         ArrayList<String> cutListOfString = new ArrayList<>();
-        if (inputName.isEmpty()) {
+        if (inputName == null) {
             Scanner in = new Scanner(System.in);
             System.out.println("Write string to cut");
             listOfString.add(in.nextLine());
         } else {
-            try (FileInputStream in = new FileInputStream(inputName)) {
-                try (InputStreamReader reader = new InputStreamReader(in)) {
-                    try (BufferedReader bufReader = new BufferedReader(reader)) {
-                        String string = bufReader.readLine();
-                        while (string != null) {
-                            listOfString.add(string);
-                            string = bufReader.readLine();
-                        }
-                    }
+            try (BufferedReader bufReader =
+                         new BufferedReader(new InputStreamReader(new FileInputStream(inputName)))) {
+                String string = bufReader.readLine();
+                while (string != null) {
+                    listOfString.add(string);
+                    string = bufReader.readLine();
                 }
             }
         }
         if (wayToCut) cutListOfString.addAll(charCut(listOfString));
         else cutListOfString.addAll(wordCut(listOfString));
 
-        if (outputName.isEmpty()){
+        if (outputName == null) {
             cutListOfString.forEach(System.out::println);
-        }else{
-            try (FileOutputStream out = new FileOutputStream(outputName)){
-                try (OutputStreamWriter writer = new OutputStreamWriter(out)){
-                    try (BufferedWriter bufWriter = new BufferedWriter(writer)){
-                        for (String string: cutListOfString) {
-                            bufWriter.write(string);
-                        }
-                    }
+        } else {
+            try (BufferedWriter bufWriter =
+                         new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputName)))) {
+                for (String string : cutListOfString) {
+                    bufWriter.write(string);
                 }
             }
         }
     }
 
-    public ArrayList<String> charCut(ArrayList<String> listOfString){
+    public List<String> charCut(ArrayList<String> listOfString) {
         ArrayList<String> cutListOfString = new ArrayList<>();
-        for (String string: listOfString) {
-            String cutString = end == -1? string.substring(start - 1) : string.substring(start - 1, end);
+        for (String string : listOfString) {
+            String cutString = end == -1 ? string.substring(start - 1) : string.substring(start - 1, end);
             cutListOfString.add(cutString);
         }
         return cutListOfString;
     }
 
-    public ArrayList<String> wordCut(ArrayList<String> listOfString){
+    public List<String> wordCut(ArrayList<String> listOfString) {
         ArrayList<String> cutListOfString = new ArrayList<>();
-        for (String string: listOfString) {
-            List<String> words = Arrays.stream(string.replaceAll("(\\s)+"," ")
+        for (String string : listOfString) {
+            List<String> words = Arrays.stream(string.replaceAll("(\\s)+", " ")
                     .split(" ")).collect(Collectors.toList());
-            String cutString = end == -1?
-                    String.join(" ",words.subList(start, words.size() - 1))
-                    : String.join(" ",words.subList(start - 1, end));
+            String cutString = end == -1 ?
+                    String.join(" ", words.subList(start, words.size() - 1))
+                    : String.join(" ", words.subList(start - 1, end));
             cutListOfString.add(cutString);
         }
         return cutListOfString;

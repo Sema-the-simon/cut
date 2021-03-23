@@ -5,6 +5,7 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.CmdLineException;
 
+import java.io.File;
 import java.io.IOException;
 public class CutLauncher {
     @Option(name = "-c", usage = "indents given in chars", forbids = {"-w"})
@@ -14,12 +15,12 @@ public class CutLauncher {
     private boolean wordCut = false;
 
     @Option(name = "-o", usage = "Output file name", metaVar = "OutputFile")
-    private String outputFile = "";
+    private File outputFile;
 
-    @Argument( usage = "Input file name", metaVar = "InputFile")
-    private String inputFile = "";
+    @Argument( usage = "Input file name", metaVar = "InputFile", index = 1)
+    private File inputFile;
 
-    @Argument(usage = "range of cut: N-K ,from N to K",metaVar = "range", required = true, index = 1)
+    @Argument(usage = "range of cut: N-K ,from N to K",metaVar = "range", required = true)
     private String range;
 
     public static void main(String[] args) {
