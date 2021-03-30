@@ -57,7 +57,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>java.org.sbpstu.buglaevsa.CutLauncher</mainClass>
+                            <mainClass>org.sbpstu.buglaevsa.CutLauncher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -69,7 +69,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>java.org.sbpstu.buglaevsa.CutLauncher</mainClass>
+                            <mainClass>org.sbpstu.buglaevsa.CutLauncher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
