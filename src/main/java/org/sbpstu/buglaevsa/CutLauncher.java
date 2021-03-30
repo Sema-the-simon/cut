@@ -9,19 +9,20 @@ import java.io.File;
 import java.io.IOException;
 public class CutLauncher {
     @Option(name = "-c", usage = "indents given in chars", forbids = {"-w"})
-    private boolean charCut = false;
+    private boolean charCut ;
 
     @Option(name = "-w", usage = "indents given in words", forbids = {"-c"})
-    private boolean wordCut = false;
+    private boolean wordCut  ;
 
     @Option(name = "-o", usage = "Output file name", metaVar = "OutputFile")
     private File outputFile;
 
-    @Argument( usage = "Input file name", metaVar = "InputFile", index = 1)
-    private File inputFile;
-
-    @Argument(usage = "range of cut: N-K ,from N to K",metaVar = "range", required = true)
+    @Option(name = "-r", usage = "range of cut: N-K ,from N to K", metaVar = "range", required = true)
     private String range;
+
+    @Argument( usage = "Input file name", metaVar = "InputFile")
+    private String inputFile = "";
+
 
     public static void main(String[] args) {
         new CutLauncher().parse(args);
@@ -32,11 +33,11 @@ public class CutLauncher {
 
         try {
             parser.parseArgument(args);
-            if (!charCut && !wordCut || range.length() == 1 || !range.matches("[0-9]*-[0-9]*"))
+            if (charCut && wordCut || range.length() == 1 || !range.matches("[0-9]*-[0-9]*"))
                 throw new CmdLineException("The way how to cut is not get");
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            System.err.println("java -jar cut.jar [-c|-w] [-o outputFile] [inputFile] range");
+            System.err.println("java -jar cut.jar [-c|-w] [-o outputFile]  -r range [InputFile]");
             parser.printUsage(System.err);
             return;
         }

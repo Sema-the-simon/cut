@@ -9,7 +9,7 @@ import java.io.*;
 
 public class Cut {
     private boolean wayToCut;
-    private int start = 0;
+    private int start = 1;
     private int end = -1;
 
     public Cut(boolean wayToCut, String range) {
@@ -18,29 +18,34 @@ public class Cut {
     }
 
     public void rangeParse(String range) {
+        String[] rangeArgs = range.split("-");
         if (range.matches("[0-9]+-[0-9]+")) {
-            String[] ranges = range.split("-");
-            this.start = Integer.parseInt(ranges[0]);
-            this.end = Integer.parseInt(ranges[1]);
+            this.start = Integer.parseInt(rangeArgs[0]);
+            this.end = Integer.parseInt(rangeArgs[1]);
         } else {
             if (range.startsWith("-")) {
-                this.end = Integer.parseInt(range) * -1;
+                this.end = Integer.parseInt(rangeArgs[1]);
             } else {
-                this.start = Integer.parseInt(range.substring(0, range.length() - 1));
+                this.start = Integer.parseInt(rangeArgs[0]);
             }
         }
     }
 
-    public void cutter(File inputName, File outputName) throws IOException {
+    public void cutter(String inputName, File outputName) throws IOException {
         ArrayList<String> listOfString = new ArrayList<>();
         ArrayList<String> cutListOfString = new ArrayList<>();
-        if (inputName == null) {
+        if (inputName.isEmpty()) {
             Scanner in = new Scanner(System.in);
-            System.out.println("Write string to cut");
-            listOfString.add(in.nextLine());
+            System.out.println("Write string to cut or write \"CutEnd\" to finish");
+            String string = in.nextLine();
+            while (in.hasNext() && !string.equals("CutEnd")) {
+                listOfString.add(string);
+                string = in.nextLine();
+                if(string.equals("CutEnd")) break;
+            }
         } else {
             try (BufferedReader bufReader =
-                         new BufferedReader(new InputStreamReader(new FileInputStream(inputName)))) {
+                         new BufferedReader(new FileReader(inputName))) {
                 String string = bufReader.readLine();
                 while (string != null) {
                     listOfString.add(string);
@@ -52,10 +57,12 @@ public class Cut {
         else cutListOfString.addAll(wordCut(listOfString));
 
         if (outputName == null) {
-            cutListOfString.forEach(System.out::println);
+            for (String s : cutListOfString) {
+                System.out.println(s);
+            }
         } else {
             try (BufferedWriter bufWriter =
-                         new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputName)))) {
+                         new BufferedWriter(new FileWriter(outputName))) {
                 for (String string : cutListOfString) {
                     bufWriter.write(string);
                 }
@@ -78,7 +85,7 @@ public class Cut {
             List<String> words = Arrays.stream(string.replaceAll("(\\s)+", " ")
                     .split(" ")).collect(Collectors.toList());
             String cutString = end == -1 ?
-                    String.join(" ", words.subList(start, words.size() - 1))
+                    String.join(" ", words.subList(start - 1, words.size()))
                     : String.join(" ", words.subList(start - 1, end));
             cutListOfString.add(cutString);
         }
