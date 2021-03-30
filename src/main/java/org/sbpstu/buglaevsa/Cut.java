@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.io.*;
 
 public class Cut {
-    private boolean wayToCut;
+    private final boolean wayToCut;
     private int start = 1;
     private int end = -1;
 
@@ -31,10 +31,10 @@ public class Cut {
         }
     }
 
-    public void cutter(String inputName, File outputName) throws IOException {
+    public void cutter(File inputName, File outputName) throws IOException {
         ArrayList<String> listOfString = new ArrayList<>();
         ArrayList<String> cutListOfString = new ArrayList<>();
-        if (inputName.isEmpty()) {
+        if (inputName == null) {
             Scanner in = new Scanner(System.in);
             System.out.println("Write string to cut or write \"CutEnd\" to finish");
             String string = in.nextLine();
@@ -57,14 +57,16 @@ public class Cut {
         else cutListOfString.addAll(wordCut(listOfString));
 
         if (outputName == null) {
-            for (String s : cutListOfString) {
-                System.out.println(s);
+            for (int i = 0; i < cutListOfString.size(); i++) {
+                System.out.print(cutListOfString.get(i));
+                if (i != cutListOfString.size() - 1) System.out.println("");
             }
         } else {
             try (BufferedWriter bufWriter =
                          new BufferedWriter(new FileWriter(outputName))) {
-                for (String string : cutListOfString) {
-                    bufWriter.write(string);
+                for (int i = 0; i < cutListOfString.size(); i++) {
+                    bufWriter.write(cutListOfString.get(i));
+                    if (i != cutListOfString.size() - 1) bufWriter.newLine();
                 }
             }
         }
@@ -73,8 +75,14 @@ public class Cut {
     public List<String> charCut(ArrayList<String> listOfString) {
         ArrayList<String> cutListOfString = new ArrayList<>();
         for (String string : listOfString) {
-            String cutString = end == -1 ? string.substring(start - 1) : string.substring(start - 1, end);
-            cutListOfString.add(cutString);
+            if (string.length() < start) {
+                cutListOfString.add("");
+                continue;
+            }
+            if (string.length() < end) cutListOfString.add(string.substring(start - 1));
+            else {
+                String cutString = end == -1 ? string.substring(start - 1) : string.substring(start - 1, end);
+                cutListOfString.add(cutString);}
         }
         return cutListOfString;
     }
@@ -84,10 +92,17 @@ public class Cut {
         for (String string : listOfString) {
             List<String> words = Arrays.stream(string.replaceAll("(\\s)+", " ")
                     .split(" ")).collect(Collectors.toList());
-            String cutString = end == -1 ?
-                    String.join(" ", words.subList(start - 1, words.size()))
-                    : String.join(" ", words.subList(start - 1, end));
-            cutListOfString.add(cutString);
+            if (words.size() < start) {
+                cutListOfString.add("");
+                continue;
+            }
+            if (words.size() < end) cutListOfString.add(String.join(" ", words.subList(start - 1, words.size())));
+            else {
+                String cutString = end == -1 ?
+                        String.join(" ", words.subList(start - 1, words.size()))
+                        : String.join(" ", words.subList(start - 1, end));
+                cutListOfString.add(cutString);
+            }
         }
         return cutListOfString;
     }

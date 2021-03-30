@@ -21,7 +21,7 @@ public class CutLauncher {
     private String range;
 
     @Argument( usage = "Input file name", metaVar = "InputFile")
-    private String inputFile = "";
+    private File inputFile;
 
 
     public static void main(String[] args) {
@@ -33,8 +33,8 @@ public class CutLauncher {
 
         try {
             parser.parseArgument(args);
-            if (charCut && wordCut || range.length() == 1 || !range.matches("[0-9]*-[0-9]*"))
-                throw new CmdLineException("The way how to cut is not get");
+            if (!charCut && !wordCut || range.length() == 1 || !range.matches("[0-9]*-[0-9]*"))
+                throw new CmdLineException(parser,"The way how to cut is not get", new IllegalArgumentException());
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             System.err.println("java -jar cut.jar [-c|-w] [-o outputFile]  -r range [InputFile]");
