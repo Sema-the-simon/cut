@@ -25,7 +25,7 @@ class ConsoleTest {
     }
 
     @Test
-    void SystemOutTest() throws IOException {
+    void SystemOutTest() {
         File inputFile = getFile("src/test/resources/input/input2.txt");
         assertEquals("ashisa to w", MySystemOut(("-c -r 4-14 " + inputFile).split(" ")));
     }
