@@ -1,11 +1,11 @@
 package org.sbpstu.buglaevsa;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-import java.io.*;
 
 public class Cut {
     private final boolean wayToCut;
@@ -22,12 +22,15 @@ public class Cut {
         if (range.matches("[0-9]+-[0-9]+")) {
             this.start = Integer.parseInt(rangeArgs[0]);
             this.end = Integer.parseInt(rangeArgs[1]);
+            if (start > end) throw new IllegalArgumentException("Wrong range format");
         } else {
             if (range.startsWith("-")) {
                 this.end = Integer.parseInt(rangeArgs[1]);
             } else {
                 this.start = Integer.parseInt(rangeArgs[0]);
             }
+            if (end == 0 || start == 0) throw new IllegalArgumentException("Wrong range format");
+
         }
     }
 
@@ -59,7 +62,7 @@ public class Cut {
         if (outputName == null) {
             for (int i = 0; i < cutListOfString.size(); i++) {
                 System.out.print(cutListOfString.get(i));
-                if (i != cutListOfString.size() - 1) System.out.println("");
+                if (i != cutListOfString.size() - 1) System.out.println();
             }
         } else {
             try (BufferedWriter bufWriter =
