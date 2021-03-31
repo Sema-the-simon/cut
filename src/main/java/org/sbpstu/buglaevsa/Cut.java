@@ -29,9 +29,8 @@ public class Cut {
             } else {
                 this.start = Integer.parseInt(rangeArgs[0]);
             }
-            if (end == 0 || start == 0) throw new IllegalArgumentException("Wrong range format");
-
         }
+        if (end == 0 || start == 0) throw new IllegalArgumentException("Wrong range format");
     }
 
     public void cutter(File inputName, File outputName) throws IOException {
@@ -111,4 +110,3 @@ public class Cut {
     }
 
 }
-
