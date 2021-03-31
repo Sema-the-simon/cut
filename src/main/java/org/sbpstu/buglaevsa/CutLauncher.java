@@ -41,8 +41,8 @@ public class CutLauncher {
             parser.printUsage(System.err);
             return;
         }
-        Cut cut = new Cut(charCut, range);
         try {
+            Cut cut = new Cut(charCut, range);
             cut.cutter(inputFile, outputFile);
         } catch (IOException | IllegalArgumentException e) {
             System.err.println(e.getMessage());
