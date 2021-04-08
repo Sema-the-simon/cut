@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Cut {
+    static final String STOP_LINE = "CutEnd";
     private final boolean wayToCut;
     private int start = 1;
     private int end = -1;
@@ -40,7 +41,7 @@ public class Cut {
             Scanner in = new Scanner(System.in);
             System.out.println("Write string to cut or write \"CutEnd\" to finish");
             String string = in.nextLine();
-            while (in.hasNext() && !string.equals("CutEnd")) {
+            while (in.hasNext() && !string.equals(STOP_LINE)) {
                 listOfString.add(string);
                 string = in.nextLine();
                 if(string.equals("CutEnd")) break;
@@ -58,23 +59,27 @@ public class Cut {
         if (wayToCut) cutListOfString.addAll(charCut(listOfString));
         else cutListOfString.addAll(wordCut(listOfString));
 
+        output(outputName,cutListOfString);
+    }
+
+    public void output(File outputName, List<String> cutList) throws IOException {
         if (outputName == null) {
-            for (int i = 0; i < cutListOfString.size(); i++) {
-                System.out.print(cutListOfString.get(i));
-                if (i != cutListOfString.size() - 1) System.out.println();
+            for (int i = 0; i < cutList.size(); i++) {
+                System.out.print(cutList.get(i));
+                if (i != cutList.size() - 1) System.out.println();
             }
         } else {
-            try (BufferedWriter bufWriter =
+            try (BufferedWriter bw =
                          new BufferedWriter(new FileWriter(outputName))) {
-                for (int i = 0; i < cutListOfString.size(); i++) {
-                    bufWriter.write(cutListOfString.get(i));
-                    if (i != cutListOfString.size() - 1) bufWriter.newLine();
+                for (int i = 0; i < cutList.size(); i++) {
+                    bw.write(cutList.get(i));
+                    if (i != cutList.size() - 1) bw.newLine();
                 }
             }
         }
     }
 
-    public List<String> charCut(ArrayList<String> listOfString) {
+    public List<String> charCut(List<String> listOfString) {
         ArrayList<String> cutListOfString = new ArrayList<>();
         for (String string : listOfString) {
             if (string.length() < start) {
@@ -89,7 +94,7 @@ public class Cut {
         return cutListOfString;
     }
 
-    public List<String> wordCut(ArrayList<String> listOfString) {
+    public List<String> wordCut(List<String> listOfString) {
         ArrayList<String> cutListOfString = new ArrayList<>();
         for (String string : listOfString) {
             List<String> words = Arrays.stream(string.replaceAll("(\\s)+", " ")

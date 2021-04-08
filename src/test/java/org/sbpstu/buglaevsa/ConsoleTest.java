@@ -3,15 +3,11 @@ package org.sbpstu.buglaevsa;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-
 import org.junit.jupiter.api.Test;
-
 import static org.apache.commons.io.FileUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConsoleTest {
-
 
     private File getFileResources(String filename) throws URISyntaxException {
         URL url = getClass().getClassLoader().getResource(filename);
@@ -36,8 +32,8 @@ class ConsoleTest {
     }
 
     @Test
-    void SystemOutTest() {
-        File inputFile = getFile("src/test/resources/input/input2.txt");
+    void SystemOutTest() throws URISyntaxException {
+        File inputFile = getFileResources("input/input2.txt");
         assertEquals("ashisa to w", MySystemOut(("-c -r 4-14 " + inputFile).split(" ")));
     }
 
